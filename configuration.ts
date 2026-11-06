@@ -1,11 +1,14 @@
-import { toLower } from "lodash";
+import lodash from "lodash";
 
 // Copy from src/configuration.ts as this utility is not exported.
 function parseBooleanEnvVariable(
-  environmentVariable: string,
+  environmentVariable: string | undefined,
   defaultCase: boolean = false
 ): boolean {
-  switch (toLower(environmentVariable)) {
+  if (!environmentVariable) {
+    return defaultCase;
+  }
+  switch (lodash.toLower(environmentVariable)) {
     case "0":
     case "false":
     case "no":
@@ -25,9 +28,12 @@ function parseBooleanEnvVariable(
   }
 }
 function parseNumber(
-  environmentVariable: string,
+  environmentVariable: string | undefined,
   defaultValue?: number,
 ): number | undefined {
+  if (!environmentVariable) {
+    return defaultValue ?? undefined;
+  }
   const number = Number(environmentVariable);
   if (isNaN(number) || number < 0 || number > Number.MAX_SAFE_INTEGER) {
     return defaultValue ?? undefined;
@@ -35,7 +41,7 @@ function parseNumber(
   return number;
 }
 function parseList(
-  environmentVariable: string,
+  environmentVariable: string | undefined,
   defaultList: string[] = [],
 ): string[] {
   return environmentVariable
@@ -45,10 +51,10 @@ function parseList(
 
 const configuration = {
   ENABLED: parseBooleanEnvVariable(process.env.PLUGIN_ALMOSTEASYGOING_VNDB_ENABLED, true),
-  PRIORITY: parseNumber(process.env.PLUGIN_ALMOSTEASYGOING_VNDB_PRIORITY, 5),
+  PRIORITY: parseNumber(process.env.PLUGIN_ALMOSTEASYGOING_VNDB_PRIORITY, 5) ?? 5,
   // See "Usage Terms" in https://api.vndb.org/kana. About 200 requests per 5 minutes.
   // Note that one query may lead to multiple requests due to related object fetching.
-  REQUEST_INTERVAL_MS: parseNumber(process.env.PLUGIN_ALMOSTEASYGOING_VNDB_REQUEST_INTERVAL_MS, 700),
+  REQUEST_INTERVAL_MS: parseNumber(process.env.PLUGIN_ALMOSTEASYGOING_VNDB_REQUEST_INTERVAL_MS, 700) ?? 700,
   // Languages (two letter language codes, see https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes).
   // Used for filtering and ordering vns and releases. Does NOT affect the title.
   // An empty list means no filtering is done (all languages included).

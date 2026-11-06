@@ -22,7 +22,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20]
+        node-version: [22]
 
     steps:
       # 1. Checkout my plugin repo.
@@ -48,7 +48,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10
+          version: 11
 
       # 5. Setup Node + pnpm cache.
       - name: Setup Node ${{ matrix.node-version }}

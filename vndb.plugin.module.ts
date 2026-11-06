@@ -2,10 +2,10 @@ import { Module } from "@nestjs/common";
 import {
   GameVaultPluginModule,
   GameVaultPluginModuleMetadataV1,
-} from "../../../src/globals";
-import { MetadataModule } from "src/modules/metadata/metadata.module";
-import { MediaModule } from "src/modules/media/media.module";
-import { VNDBMetadataProviderService } from "./vndb.metadata-provider.service";
+} from "../../../src/globals.js";
+import { MetadataModule } from "../../../src/modules/metadata/metadata.module.js";
+import { MediaModule } from "../../../src/modules/media/media.module.js";
+import { VNDBMetadataProviderService } from "./vndb.metadata-provider.service.js";
 
 @Module({
   imports: [MetadataModule, MediaModule],
@@ -15,7 +15,7 @@ export default class VNDBPluginModule implements GameVaultPluginModule {
   metadata: GameVaultPluginModuleMetadataV1 = {
     name: "VNDB Metadata Provider",
     author: "AlmostEasyGoing",
-    version: "1.2.0",
+    version: "1.3.0",
     description:
       "A plugin to provide metadata using VNDB (The Visual Novel Database).",
     keywords: ["vndb", "visual", "novel", "visual novel", "vn", "metadata"],

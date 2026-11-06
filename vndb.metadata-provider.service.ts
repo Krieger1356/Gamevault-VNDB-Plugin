@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { MetadataProvider } from "../../../src/modules/metadata/providers/abstract.metadata-provider.service";
-import { MinimalGameMetadataDto } from "../../../src/modules/metadata/games/minimal-game.metadata.dto";
-import { GameMetadata } from "../../../src/modules/metadata/games/game.metadata.entity";
-import { GenreMetadata } from "../../../src/modules/metadata/genres/genre.metadata.entity";
-import { TagMetadata } from "../../../src/modules/metadata/tags/tag.metadata.entity";
-import { VNDBClient } from "./client";
-import type { VisualNovel, VisualNovelRelease } from "./models";
-import configuration from "./configuration";
-import { GamevaultGame } from "src/modules/games/gamevault-game.entity";
+import { MetadataProvider } from "../../../src/modules/metadata/providers/abstract.metadata-provider.service.js";
+import { MinimalGameMetadataDto } from "../../../src/modules/metadata/games/minimal-game.metadata.dto.js";
+import { GameMetadata } from "../../../src/modules/metadata/games/game.metadata.entity.js";
+import { GenreMetadata } from "../../../src/modules/metadata/genres/genre.metadata.entity.js";
+import { TagMetadata } from "../../../src/modules/metadata/tags/tag.metadata.entity.js";
+import { VNDBClient } from "./client.js";
+import type { VisualNovel, VisualNovelRelease } from "./models/index.js";
+import configuration from "./configuration.js";
+import { GamevaultGame } from "../../../src/modules/games/gamevault-game.entity.js";
 
 @Injectable()
 export class VNDBMetadataProviderService extends MetadataProvider {
@@ -52,12 +52,12 @@ export class VNDBMetadataProviderService extends MetadataProvider {
   public override async getBestMatch(
     game: GamevaultGame
   ): Promise<MinimalGameMetadataDto> {
-    let result: MinimalGameMetadataDto;
+    let result: MinimalGameMetadataDto | undefined;
     const client = this.getClient();
     const titleRegex = new RegExp(/\[vndbid-(?<id>\d+)\]/);
-    const titleMatch = game.title.match(titleRegex);
-    if (titleMatch) {
-      const { id } = titleMatch.groups;
+    const titleMatch = game.title?.match(titleRegex);
+    const id = titleMatch?.groups?.id;
+    if (id) {
       this.logger.debug(
         `Got ID ${id} from game titled ${game.title}. ` +
         `Attempting to use ID based search.`
